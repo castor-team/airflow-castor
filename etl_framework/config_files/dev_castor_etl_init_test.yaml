@@ -1,8 +1,11 @@
 dag:
-  name: 'dev_castor_etl_init_test'
+  dag_id: 'dev_castor_etl_init_test'
   default_args: '{"owner": "data_engineering", "start_date": "2021-05-11"}'
-  schedule: '@once'
+  schedule_interval: '@once'
   catchup: False
+  tags:
+    - dev
+    - test
 tasks:
   - name: 'print_params'
     depends_on: 'start'

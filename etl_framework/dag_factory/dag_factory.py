@@ -1,3 +1,5 @@
+from datetime import timedelta
+import json
 import os
 import sys
 
@@ -8,27 +10,32 @@ from task_creator.task_creator import TaskCreator
 from task_creator.strategies.python_operator_strategy import PythonOperatorStrategy
 from operator_factory.airflow_operator_factory import AirflowOperatorFactory
 
+
 class DAGFactory:
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        self.type_casting()
+        self.dag = DAG(**kwargs)
 
-    def __init__(self, dag_name, default_args, schedule, catchup):
-        self.dag_name = dag_name
-        self.default_args = default_args
-        self.schedule = schedule
-        self.catchup = catchup
-
-    def create_dag(self, dag_name, default_args, schedule, catchup):
-        dag = DAG(
-            dag_name, 
-            default_args = default_args,
-            schedule_interval = schedule,
-            catchup = catchup)
-        return dag
+    def type_casting(self) -> None:
+        if 'user_defined_macros' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['user_defined_macros']))
+        if 'user_defined_filters' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['user_defined_filters']))
+        if 'default_args' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['default_args']))
+        if 'params' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['params']))
+        if 'access_control' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['access_control']))
+        if 'jinja_environment_kwargs' in self.kwargs:
+            self.kwargs.update(default_args = json.loads(self.kwargs['jinja_environment_kwargs']))
 
     def get_airflow_dag(self, tasks):
-        dag = self.create_dag(self.dag_name, self.default_args, self.schedule, self.catchup)
+        #dag = self.create_dag(self.dag_id, self.default_args, self.schedule, self.catchup)
 
-        start = AirflowOperatorFactory.get_dummy_operator(dag, 'start')
-        end = AirflowOperatorFactory.get_dummy_operator(dag, 'end')
+        start = AirflowOperatorFactory.get_dummy_operator(self.dag, 'start')
+        end = AirflowOperatorFactory.get_dummy_operator(self.dag, 'end')
 
         tasks_dict = {}
         tasks_dict['start'] = start
@@ -40,7 +47,7 @@ class DAGFactory:
                     task['name'],
                     task['args'])
                 task_creator = TaskCreator(strategy)
-                tasks_dict[task['name']] = task_creator.create_task(dag)
+                tasks_dict[task['name']] = task_creator.create_task(self.dag)
             else:
                 msg = "Estrategia desconocida: {}"
                 raise NameError(msg.format(task['strategy']))
@@ -60,4 +67,4 @@ class DAGFactory:
         for task_name in no_blocking_tasks:
             tasks_dict[task_name] >> end
 
-        return dag
+        return self.dag
