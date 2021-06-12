@@ -49,7 +49,7 @@ class DAGFactory:
                 task_creator = TaskCreator(strategy)
                 tasks_dict[task['name']] = task_creator.create_task(self.dag)
             else:
-                msg = "Estrategia desconocida: {}"
+                msg = "Unknown Castor strategy: {}"
                 raise NameError(msg.format(task['strategy']))
 
         all_depends_on = []
