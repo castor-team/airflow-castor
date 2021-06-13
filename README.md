@@ -11,7 +11,7 @@ A framework for building Airflow DAGs via YAML files. Castor comprises four modu
 A set of YAMLs files defined by the user. Each YAML file represents an Airflow DAG.
 
 ## Syntax
-The YAML comprises two sections: `dag` and `tasks`. Check [this](castor/config_files/init_castor_dag.yaml) for an example of a valid YAML file.
+The YAML comprises two sections: `dag` and `tasks`.
 
 ### DAG section
 
@@ -51,6 +51,59 @@ This is an example of a `task` section in a YAML file:
         python_callable: 'print_params'
         op_kwargs:
             param1: 'value1' 
+```
+
+### Example
+This is a YAML file containing a simple Airflow DAG for showing Castor capabilities.
+```
+dag:
+  dag_id: 'init_castor_dag'
+  default_args: '{"owner": "castor", "start_date": "2021-06-13"}'
+  schedule_interval: '@once'
+  catchup: False
+  tags:
+    - example
+tasks:
+    - name: 'start'
+      strategy: 'DummyOperatorStrategy'
+    - name: 't1'
+      strategy: 'PythonOperatorStrategy'
+      depends_on: 
+        - 'start'
+      args:
+        retries: 2
+        trigger_rule: 'all_success'
+        provide_context: True
+        python_callable: 'print_params'
+        op_kwargs:
+          param1: 'value1' 
+    - name: 't2'
+      strategy: 'PythonOperatorStrategy'
+      depends_on: 
+        - 'start'
+      args:
+        retries: 2
+        trigger_rule: 'all_success'
+        provide_context: True
+        python_callable: 'print_params'
+        op_kwargs:
+          param1: 'value1'
+    - name: 't3'
+      strategy: 'PythonOperatorStrategy'
+      depends_on: 
+        - 't1'
+        - 't2'
+      args:
+        retries: 2
+        trigger_rule: 'all_success'
+        provide_context: True
+        python_callable: 'print_params'
+        op_kwargs:
+          param1: 'value1' 
+    - name: 'end'
+      strategy: 'DummyOperatorStrategy'
+      depends_on: 
+        - 't3'
 ```
 
 # DAG Factory
