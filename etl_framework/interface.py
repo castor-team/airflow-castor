@@ -24,7 +24,7 @@ for filename in os.listdir('{}/config_files/'.format(dir_absolute_path)):
             
             # List of tasks to be performed by the DAG
             tasks = config_file['tasks']
+            print(tasks)
 
-            #dag = DAGFactory(dag_id = dag_id, default_args = default_args, schedule_interval = schedule, catchup = catchup)
             dag = DAGFactory(**config_file['dag'])
             globals()[config_file['dag']['dag_id']] = dag.get_airflow_dag(tasks)
