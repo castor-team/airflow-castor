@@ -7,8 +7,6 @@ from task_creator.strategies.python_operator_strategy import PythonOperatorStrat
 from task_creator.strategies.dummy_operator_strategy import DummyOperatorStrategy
 
 class TaskCreator:
-    # def __init__(self, strategy: TaskStrategy) -> None:
-    #     self._strategy = strategy
     def __init__(self, task) -> None:
         self.name = task['name']
         self.args = task['args'] if 'args' in task else None

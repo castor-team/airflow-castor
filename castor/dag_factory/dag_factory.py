@@ -43,7 +43,6 @@ class DAGFactory:
         for task in tasks:
             task_creator = TaskCreator(task)
             tasks_dict[task['name']] = task_creator.create_task(self.dag)
-            
             if 'depends_on' in task:
                 task_dependencies[task['name']] = task['depends_on'] 
 
