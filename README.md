@@ -20,8 +20,8 @@ The Task Creator is responsible for creating DAG tasks based on task strategies.
 A task strategy represents a strategy in which a task can be executed. A strategy can be based on an Airflow operator (*e.g.,* PythonOperatorStrategy).
 
 The strategies supported by Castor at this moment in time are:
-- [DummyOperatorStrategy](task_creator/strategies/python_operator_strategy.py)
-- [PythonOperatorStrategy](task_creator/strategies/dummy_operator_strategy.py)
+- [DummyOperatorStrategy](castor/task_creator/strategies/python_operator_strategy.py)
+- [PythonOperatorStrategy](castor/task_creator/strategies/dummy_operator_strategy.py)
 
 
 # Operator factory
