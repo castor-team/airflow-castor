@@ -100,10 +100,28 @@ tasks:
         python_callable: 'print_params'
         op_kwargs:
           param1: 'value1' 
+    - name: 't4'
+      strategy: 'NotebookOperatorStrategy'
+      depends_on:
+        - 't3'
+      args:
+        retries: 2
+        trigger_rule: 'all_success'
+        provide_context: True
+        runner: 'DATABRICKS'
+        databricks_conn_id: '<CONNECTION_ID (Optional)>'
+        notebook_path: '<NOTEBOOK_PATH_IN_DATABRICKS_WORKSPACE>'
+        cluster_id: '<CLUSTER_ID (provide cluster_id or `new_cluster` definition)>'
+        new_cluster:
+          spark_version: '2.1.0-db3-scala2.11'
+          node_type_id: 'r3.xlarge'
+          aws_attributes:
+            availability: 'ON_DEMAND'
+          num_workers: 8
     - name: 'end'
       strategy: 'DummyOperatorStrategy'
-      depends_on: 
-        - 't3'
+      depends_on:
+        - 't4'
 ```
 
 # DAG Factory
@@ -118,6 +136,7 @@ A task strategy represents a strategy in which a task can be executed. A strateg
 The strategies supported by Castor at this moment in time are:
 - [DummyOperatorStrategy](castor/task_creator/strategies/python_operator_strategy.py)
 - [PythonOperatorStrategy](castor/task_creator/strategies/dummy_operator_strategy.py)
+- [NotebookOperatorStrategy](castor/task_creator/strategies/notebook_operator_strategy.py)
 
 
 # Operator factory
@@ -126,3 +145,4 @@ It is responsible for creating Airflow Operators based on a set of parameters su
 The operators supported by Castor at this moment in time are:
 - [DummyOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/dummy/index.html)
 - [PythonOperator](https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/operators/python.html#PythonOperator)
+- [DatabricksOperator](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators.html#databrickssubmitrunoperator)

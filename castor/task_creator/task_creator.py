@@ -5,6 +5,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 from task_creator.task_strategy import TaskStrategy
 from task_creator.strategies.python_operator_strategy import PythonOperatorStrategy
 from task_creator.strategies.dummy_operator_strategy import DummyOperatorStrategy
+from task_creator.strategies.notebook_operator_strategy import NotebookOperatorStrategy
+
 
 class TaskCreator:
     def __init__(self, task) -> None:
@@ -17,6 +19,8 @@ class TaskCreator:
             self._strategy = PythonOperatorStrategy(self.name, self.args)
         elif self._strategy == 'DummyOperatorStrategy':
             self._strategy = DummyOperatorStrategy(self.name)
+        elif self._strategy == 'NotebookOperatorStrategy':
+            self._strategy = NotebookOperatorStrategy(self.name, self.args)
         else:
             msg = "Unknown Castor strategy: {}"
             raise NameError(msg.format(self._strategy))
