@@ -18,17 +18,17 @@ class DAGFactory:
 
     def type_casting(self) -> None:
         if 'user_defined_macros' in self.kwargs:
-            self.kwargs.update(default_args = json.loads(self.kwargs['user_defined_macros']))
+            self.kwargs.update(user_defined_macros = json.loads(self.kwargs['user_defined_macros']))
         if 'user_defined_filters' in self.kwargs:
-            self.kwargs.update(default_args = json.loads(self.kwargs['user_defined_filters']))
+            self.kwargs.update(user_defined_filters = json.loads(self.kwargs['user_defined_filters']))
         if 'default_args' in self.kwargs:
             self.kwargs.update(default_args = json.loads(self.kwargs['default_args']))
         if 'params' in self.kwargs:
-            self.kwargs.update(default_args = json.loads(self.kwargs['params']))
+            self.kwargs.update(params = json.loads(self.kwargs['params']))
         if 'access_control' in self.kwargs:
-            self.kwargs.update(default_args = json.loads(self.kwargs['access_control']))
+            self.kwargs.update(access_control = json.loads(self.kwargs['access_control']))
         if 'jinja_environment_kwargs' in self.kwargs:
-            self.kwargs.update(default_args = json.loads(self.kwargs['jinja_environment_kwargs']))
+            self.kwargs.update(jinja_environment_kwargs = json.loads(self.kwargs['jinja_environment_kwargs']))
 
     def get_airflow_dag(self, tasks):
         '''
